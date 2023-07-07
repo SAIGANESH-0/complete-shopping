@@ -33,12 +33,9 @@ app.get("/", (req, res) => {
 });
 
 //PORT
-const PORT = process.env.PORT || 8080;
+const PORT = process.env.PORT || 3001;
 
 //run listen
 app.listen(PORT, () => {
-  console.log(
-    `Server Running on ${process.env.DEV_MODE} mode on port ${PORT}`.bgCyan
-      .white
-  );
+  console.log(`Server Running on dev mode on port ${PORT}`.bgCyan.white);
 });
