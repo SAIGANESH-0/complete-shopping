@@ -1,44 +1,56 @@
 import express from "express";
-import { isAdmin, requireSignIn } from "./../middlewares/authMiddleware.js";
 import {
-  categoryControlller,
-  createCategoryController,
-  deleteCategoryCOntroller,
-  singleCategoryController,
-  updateCategoryController,
-} from "./../controllers/categoryController.js";
+  registerController,
+  loginController,
+  testController,
+  forgotPasswordController,
+  updateProfileController,
+  getOrdersController,
+  getAllOrdersController,
+  orderStatusController,
+} from "../controllers/authController.js";
+import { isAdmin, requireSignIn } from "../middlewares/authMiddleware.js";
 
+//router object
 const router = express.Router();
 
-//routes
-// create category
-router.post(
-  "/create-category",
-  requireSignIn,
-  isAdmin,
-  createCategoryController
-);
+//routing
+//REGISTER || METHOD POST
+router.post("/register", registerController);
 
-//update category
+//LOGIN || POST
+router.post("/login", loginController);
+
+//Forgot Password || POST
+router.post("/forgot-password", forgotPasswordController);
+
+//test routes
+router.get("/test", requireSignIn, isAdmin, testController);
+
+//protected User route auth
+router.get("/user-auth", requireSignIn, (req, res) => {
+  res.status(200).send({ ok: true });
+});
+//protected Admin route auth
+router.get("/admin-auth", requireSignIn, isAdmin, (req, res) => {
+  res.status(200).send({ ok: true });
+});
+
+//update profile
+router.put("/profile", requireSignIn, updateProfileController);
+
+//orders
+router.get("/orders", requireSignIn, getOrdersController);
+
+//all orders
+router.get("/all-orders", requireSignIn, isAdmin, getAllOrdersController);
+
+// order status update
 router.put(
-  "/update-category/:id",
+  "/order-status/:orderId",
   requireSignIn,
   isAdmin,
-  updateCategoryController
-);
-
-//getALl category
-router.get("/get-category", categoryControlller);
-
-//single category
-router.get("/single-category/:slug", singleCategoryController);
-
-//delete category
-router.delete(
-  "/delete-category/:id",
-  requireSignIn,
-  isAdmin,
-  deleteCategoryCOntroller
+  orderStatusController
 );
 
 export default router;
